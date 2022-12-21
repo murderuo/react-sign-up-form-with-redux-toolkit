@@ -1,6 +1,18 @@
-*,::before,::after{
+*,
+::before,
+::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  
+}
+
+.container-height {
+  height: 600px;
+}
+
+.container-bg {
+  background-image: url('../assets/bg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+
 }
