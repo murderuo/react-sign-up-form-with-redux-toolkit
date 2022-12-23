@@ -3,6 +3,10 @@ import { useState } from 'react';
 import * as Yup from 'yup';
 import { v4 } from 'uuid';
 import 'yup-phone';
+import { addUser } from '../../store/userSlice';
+
+import { useDispatch } from 'react-redux';
+
 
 function Form() {
   const [phoneNumber, setPhoneNumber] = useState('05xxxxxxxxx');
@@ -14,7 +18,8 @@ function Form() {
     setPhoneNumber('05xxxxxxxxx');
   };
 
-  
+  const dispatch = useDispatch();
+
   const initialFormData = {
     id: v4().slice(0, 4),
     firstName: '',
@@ -42,12 +47,11 @@ function Form() {
     accept: Yup.boolean()
       .required('Required')
       .oneOf([true], 'You must accept the all rules'),
-    password: Yup.string()
-      .min(4, 'Password must be 8 characters long'),
-      // .matches(/[0-9]/, 'Password requires a number')
-      // .matches(/[a-z]/, 'Password requires a lowercase letter')
-      // .matches(/[A-Z]/, 'Password requires an uppercase letter')
-      // .matches(/[^\w]/, 'Password requires a symbol'),
+    password: Yup.string().min(4, 'Password must be 8 characters long'),
+    // .matches(/[0-9]/, 'Password requires a number')
+    // .matches(/[a-z]/, 'Password requires a lowercase letter')
+    // .matches(/[A-Z]/, 'Password requires an uppercase letter')
+    // .matches(/[^\w]/, 'Password requires a symbol'),
     repassword: Yup.string().oneOf(
       [Yup.ref('password'), null],
       'Must match "password" field value',
@@ -57,7 +61,9 @@ function Form() {
     useFormik({
       initialValues: initialFormData,
       onSubmit: values => {
-        console.log(values);
+        dispatch(addUser(values));
+        // if (!errors) {
+        // }
       },
       validationSchema: valSchema,
     });
