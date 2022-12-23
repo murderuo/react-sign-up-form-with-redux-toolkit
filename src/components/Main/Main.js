@@ -1,11 +1,12 @@
 import Form from '../Form/';
+import FormList from '../FormList/';
 import Header from '../Header/';
 
 function Main() {
   return (
     <>
-      <div className="row">
-        <div className="col-xxl-8 col-xl-12 mt-5 shadow">
+      <div className="row mx-auto">
+        <div className="col-xxl-6 col-xl-12 mt-5 shadow">
           <div className="row border rounded">
             <div className="col-lg-4 col-md-12 container-bg rounded">
               <div className="letf-side-height rounded"></div>
@@ -29,10 +30,26 @@ function Main() {
             </div>
           </div>
         </div>
-        <div className="col-xxl-4 col-xl-12 mt-5 ">
+        <div className="col-xxl-6 col-xl-12 mt-5 ">
           <div className="row">
             <div className="col-lg-12 ">
-              <div className="border rounded p-3">test</div>
+              <table className="table table-hover ">
+                <thead className="rounded p-5 bg-secondary ">
+                  <tr>
+                    <th>FirstName</th>
+                    <th>LastName</th>
+                    <th>PhoneNumber</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                    <th>
+                      <div className="d-flex justify-content-center">
+                        Action
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <FormList />
+              </table>
             </div>
           </div>
         </div>
