@@ -1,18 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk&display=swap');
+
 *,
 ::before,
 ::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Hanken Grotesk', sans-serif;
 }
 
-.container-height {
-  height: 600px;
-}
+
 
 .container-bg {
   background-image: url('../assets/bg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
+}
 
+.letf-side-height {
+  height: 200px;
+}
+
+.shadow{
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
