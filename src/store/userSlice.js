@@ -32,7 +32,8 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     addUser: values => {
-      console.log(values);
+      // console.log(values);
+      state.userdata.push(values)
     },
     deleteUser: () => {},
     editUser: () => {},

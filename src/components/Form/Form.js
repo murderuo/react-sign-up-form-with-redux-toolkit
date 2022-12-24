@@ -1,39 +1,38 @@
-import { useFormik } from 'formik';
-import { useState } from 'react';
-import * as Yup from 'yup';
-import { v4 } from 'uuid';
-import 'yup-phone';
-import { addUser } from '../../store/userSlice';
+import { useFormik } from "formik";
+import { useState } from "react";
+import * as Yup from "yup";
+import { v4 } from "uuid";
+import "yup-phone";
+import { addUser } from "../../store/userSlice";
 
-import { useDispatch } from 'react-redux';
-
+import { useDispatch } from "react-redux";
 
 function Form() {
-  const [phoneNumber, setPhoneNumber] = useState('05xxxxxxxxx');
+  const [phoneNumber, setPhoneNumber] = useState("05xxxxxxxxx");
 
   const onFocusHandle = () => {
-    setPhoneNumber('');
+    setPhoneNumber("");
   };
   const onBlurHandle = () => {
-    setPhoneNumber('05xxxxxxxxx');
+    setPhoneNumber("05xxxxxxxxx");
   };
 
   const dispatch = useDispatch();
 
   const initialFormData = {
     id: v4().slice(0, 4),
-    firstName: '',
-    lastName: '',
-    phonenumber: '',
-    email: '',
-    password: '',
-    repassword: '',
+    firstName: "",
+    lastName: "",
+    phonenumber: "",
+    email: "",
+    password: "",
+    repassword: "",
     adv: false,
     accept: false,
   };
   const valSchema = Yup.object({
-    firstName: Yup.string().label('First Name').required(),
-    lastName: Yup.string().label('Last Name').required(),
+    firstName: Yup.string().label("First Name").required(),
+    lastName: Yup.string().label("Last Name").required(),
     //   phonenumber: Yup.object().shape({
     //     phonenumber: Yup.string()
     //       .phone('US', 'Please enter a valid phone number')
@@ -41,36 +40,45 @@ function Form() {
     //   }),
     phonenumber: Yup.string()
       // .matches(/^(05)([0-9]{2})\s?([0-9]{3})\s?([0-9]{2})\s?([0-9]{2})$/)
-      .phone('TR', 'Please enter a valid phone number')
-      .required('A phone number is required'),
-    email: Yup.string().email().label('Email').required(),
+      .phone("TR", "Please enter a valid phone number")
+      .required("A phone number is required"),
+    email: Yup.string().email().label("Email").required(),
     accept: Yup.boolean()
-      .required('Required')
-      .oneOf([true], 'You must accept the all rules'),
-    password: Yup.string().min(4, 'Password must be 8 characters long'),
+      .required("Required")
+      .oneOf([true], "You must accept the all rules"),
+    password: Yup.string().min(4, "Password must be 8 characters long"),
     // .matches(/[0-9]/, 'Password requires a number')
     // .matches(/[a-z]/, 'Password requires a lowercase letter')
     // .matches(/[A-Z]/, 'Password requires an uppercase letter')
     // .matches(/[^\w]/, 'Password requires a symbol'),
     repassword: Yup.string().oneOf(
-      [Yup.ref('password'), null],
-      'Must match "password" field value',
+      [Yup.ref("password"), null],
+      'Must match "password" field value'
     ),
   });
-  const { values, handleChange, handleReset, handleSubmit, errors, touched } =
-    useFormik({
-      initialValues: initialFormData,
-      onSubmit: values => {
-        dispatch(addUser(values));
-        // if (!errors) {
-        // }
-      },
-      validationSchema: valSchema,
-    });
+  const {
+    values,
+    handleChange,
+    handleReset,
+    handleSubmit,
+    handleBlur,
+    errors,
+    touched,
+  } = useFormik({
+    initialValues: initialFormData,
+    onSubmit: (values) => {
+      console.log(values);
+
+      dispatch(addUser(values));
+      // if (!errors) {
+      // }
+    },
+    validationSchema: valSchema,
+  });
 
   return (
     <>
-      <form className="row" onSubmit={handleSubmit}>
+      <form className="row" onSubmit={handleSubmit} onBlur={handleBlur}>
         <div className="col-lg-6 col-md-12 p-3">
           <div className="d-flex flex-column ">
             <label htmlFor="firstName" className="fw-bold">
