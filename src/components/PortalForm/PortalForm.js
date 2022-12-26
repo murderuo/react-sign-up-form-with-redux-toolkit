@@ -1,12 +1,10 @@
 import { useFormik } from 'formik';
 import { useState } from 'react';
-import * as Yup from 'yup';
-import 'yup-phone';
-import { addUser } from '../../store/userSlice';
-
 import { useDispatch } from 'react-redux';
+import * as Yup from 'yup';
+import { showmeState, updateUser } from '../../store/userSlice';
 
-function Form() {
+function PortalForm({ user, modalConfig, setModalConfig }) {
   const [phoneNumber, setPhoneNumber] = useState('05xxxxxxxxx');
 
   const onFocusHandle = () => {
@@ -18,31 +16,10 @@ function Form() {
 
   const dispatch = useDispatch();
 
-  const initialValues = {
-    id: '',
-    type: true,
-    firstName: '',
-    lastName: '',
-    phonenumber: '',
-    email: '',
-    password: '',
-    repassword: '',
-    adv: false,
-    accept: false,
-  };
+  const initialValues = { ...user };
   const valSchema = Yup.object({
-    type: Yup.boolean().label('personal info ').required(),
-    // firstName: Yup.string().label('First Name').required(),
-    firstName: Yup.string().when('type', {
-      is: true,
-      then: Yup.string().label('First Name').required(),
-    }),
-    lastName: Yup.string().when('type', {
-      is: true,
-      then: Yup.string().label('Last Name').required(),
-      otherwise: Yup.string().label('Corparation name ').required(),
-    }),
-
+    firstName: Yup.string().label('First Name').required(),
+    lastName: Yup.string().label('Last Name').required(),
     //   phonenumber: Yup.object().shape({
     //     phonenumber: Yup.string()
     //       .phone('US', 'Please enter a valid phone number')
@@ -70,15 +47,11 @@ function Form() {
     useFormik({
       initialValues,
       onSubmit: values => {
-        const newValues =
-          values.type === true
-            ? { ...values }
-            : { ...values, firstName: 'corporation' };
+        // console.log(values);
 
-        console.log(newValues);
-
-        dispatch(addUser(newValues));
-        handleReset();
+        dispatch(updateUser(values));
+        setModalConfig({ ...modalConfig, isOpen: false });
+        // handleReset();
         // if (!errors) {
         // }
       },
@@ -88,86 +61,43 @@ function Form() {
   return (
     <>
       <form className="row" onSubmit={handleSubmit} onReset={handleReset}>
-        <div className="col-lg-12 col-md-12 p-3">
-          <div className="d-flex gap-3 justify-content-center">
-            <div className="d-flex gap-2">
-              <input
-                type="checkbox"
-                id="type"
-                onChange={handleChange}
-                value={values.type}
-                checked={values.type}
-              />
-              <label className="form-check-label" htmlFor="type">
-                For Personal
-                {JSON.stringify(errors.type)}
-              </label>
-              {touched.type && errors.type ? (
-                <span className="text-danger">{errors.type}</span>
-              ) : null}
-            </div>
+        <div className="col-lg-6 col-md-12 p-3">
+          <div className="d-flex flex-column ">
+            <label htmlFor="firstName" className="fw-bold">
+              {values.firstName === 'corporation' ? 'Type Of' : 'First Name'}
+            </label>
+            <input
+              type="text"
+              className="form-control form-control-lg mt-2"
+              id="firstName"
+              onChange={handleChange}
+              value={values.firstName}
+              disabled={!initialValues.type}
+            />
+          </div>
+          {touched.firstName && errors.firstName ? (
+            <span className="text-danger">{errors.firstName}</span>
+          ) : null}
+        </div>
+        <div className="col-lg-6 col-md-12 p-3">
+          <div className="d-flex flex-column ">
+            <label htmlFor="lastName" className="fw-bold">
+              {values.firstName === 'corporation'
+                ? 'corporation Name'
+                : 'Last Name'}
+            </label>
+            <input
+              type="text"
+              className="form-control form-control-lg  mt-2"
+              id="lastName"
+              onChange={handleChange}
+              value={values.lastName}
+            />
+            {touched.lastName && errors.lastName ? (
+              <span className="text-danger">{errors.lastName}</span>
+            ) : null}
           </div>
         </div>
-        <hr />
-        {values.type ? (
-          <>
-            <div className="col-lg-6 col-md-12 p-3">
-              <div className="d-flex flex-column ">
-                <label htmlFor="firstName" className="fw-bold">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  className="form-control form-control-lg mt-2"
-                  id="firstName"
-                  onChange={handleChange}
-                  value={values.firstName}
-                />
-              </div>
-              {touched.firstName && errors.firstName ? (
-                <span className="text-danger">{errors.firstName}</span>
-              ) : null}
-            </div>
-            <div className="col-lg-6 col-md-12 p-3">
-              <div className="d-flex flex-column ">
-                <label htmlFor="lastName" className="fw-bold">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  className="form-control form-control-lg  mt-2"
-                  id="lastName"
-                  onChange={handleChange}
-                  value={values.lastName}
-                />
-                {touched.lastName && errors.lastName ? (
-                  <span className="text-danger">{errors.lastName}</span>
-                ) : null}
-              </div>
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="col-lg-12 col-md-12 p-3">
-              <div className="d-flex flex-column ">
-                <label htmlFor="firstName" className="fw-bold">
-                  corporation Name
-                </label>
-                <input
-                  type="text"
-                  className="form-control form-control-lg mt-2"
-                  id="lastName"
-                  onChange={handleChange}
-                  value={values.lastName}
-                />
-              </div>
-              {touched.lastName && errors.lastName ? (
-                <span className="text-danger">{errors.lastName}</span>
-              ) : null}
-            </div>
-          </>
-        )}
-
         <div className="col-lg-6 col-md-12 p-3">
           <div className="d-flex flex-column ">
             <label htmlFor="phonenumber" className="fw-bold">
@@ -252,7 +182,7 @@ function Form() {
                 Yes, i wantto email for advertising mails.
               </label>
             </div>
-            <div className="d-flex align-items-center gap-2">
+            {/* <div className="d-flex align-items-center gap-2">
               <input
                 type="checkbox"
                 id="accept"
@@ -266,21 +196,27 @@ function Form() {
               {touched.accept && errors.accept ? (
                 <span className="text-danger">{errors.accept}</span>
               ) : null}
-            </div>
+            </div> */}
           </div>
         </div>
         <div className="col-lg-12 col-md-12 mt-3">
-          <div className="mt-3 ">
+          <div className="d-flex justify-content-center gap-2">
             <button
               className="btn btn-danger "
               type="reset"
-              onClick={handleReset}
+              onClick={() => setModalConfig({ ...modalConfig, isOpen: false })}
             >
-              Reset Form
+              Cancel
             </button>
             <button className="btn btn-primary ms-3" type="submit">
-              Create Account
+              Update Account
             </button>
+            {/* <button
+              className="btn btn-primary ms-3"
+              onClick={() => dispatch(showmeState)}
+            >
+              show state
+            </button> */}
           </div>
         </div>
       </form>
@@ -288,4 +224,4 @@ function Form() {
   );
 }
 
-export default Form;
+export default PortalForm;

@@ -4,6 +4,7 @@ import { v4 } from 'uuid';
 const initialState = [
   {
     id: v4().slice(0, 4),
+    type: false,
     firstName: 'ugur',
     lastName: 'okur',
     phonenumber: '05375447979',
@@ -15,7 +16,7 @@ const initialState = [
   },
   {
     id: v4().slice(0, 4),
-
+    type: false,
     firstName: 'ugur',
     lastName: 'okur',
     phonenumber: '05375447979',
@@ -28,17 +29,39 @@ const initialState = [
 ];
 
 const userSlice = createSlice({
-  name: 'userdata',
+  name: 'users',
   initialState,
   reducers: {
-    addUser: values => {
-      // console.log(values);
-      state.userdata.push(values)
+    // addUser: (type, other) => {
+    //   console.log(type, other);
+    // },
+    addUser: (state, action) => {
+      const new_payload = { ...action.payload, id: v4().slice(0, 4) };
+      state.push(new_payload);
     },
-    deleteUser: () => {},
-    editUser: () => {},
+    deleteUser: (state, action) => {
+      console.log(action.payload);
+      return state.filter(user => {
+        if (user.id !== action.payload) {
+          return user;
+        }
+      });
+    },
+    updateUser: (state, action) => {
+      state.forEach((user, index) => {
+        if (user.id === action.payload.id) {
+          user = { ...action.payload };
+          // console.log(user);
+          state[index] = user;
+        }
+      });
+    },
+    // showmeState: (state) => {
+    //   const currentState = (JSON.parse(JSON.stringify(state)));
+    //   console.log(currentState);
+    // },
   },
 });
 
-export const { addUser, deleteUser, editUser } = userSlice.actions;
+export const { addUser, deleteUser, updateUser } = userSlice.actions;
 export default userSlice.reducer;
