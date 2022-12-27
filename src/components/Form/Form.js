@@ -20,7 +20,7 @@ function Form() {
 
   const initialValues = {
     id: '',
-    type: true,
+    type: 'personal',
     firstName: '',
     lastName: '',
     phonenumber: '',
@@ -31,14 +31,14 @@ function Form() {
     accept: false,
   };
   const valSchema = Yup.object({
-    type: Yup.boolean().label('personal info ').required(),
+    type: Yup.string().label('record type ').required(),
     // firstName: Yup.string().label('First Name').required(),
     firstName: Yup.string().when('type', {
-      is: true,
+      is: val => (val === 'personal' ? true : false),
       then: Yup.string().label('First Name').required(),
     }),
     lastName: Yup.string().when('type', {
-      is: true,
+      is: val => (val === 'personal' ? true : false),
       then: Yup.string().label('Last Name').required(),
       otherwise: Yup.string().label('Corparation name ').required(),
     }),
@@ -71,7 +71,7 @@ function Form() {
       initialValues,
       onSubmit: values => {
         const newValues =
-          values.type === true
+          values.type === 'personal'
             ? { ...values }
             : { ...values, firstName: 'corporation' };
 
@@ -91,17 +91,14 @@ function Form() {
         <div className="col-lg-12 col-md-12 p-3">
           <div className="d-flex gap-3 justify-content-center">
             <div className="d-flex gap-2">
-              <input
-                type="checkbox"
-                id="type"
-                onChange={handleChange}
-                value={values.type}
-                checked={values.type}
-              />
               <label className="form-check-label" htmlFor="type">
-                For Personal
-                {JSON.stringify(errors.type)}
+                kayıt tipi
               </label>
+              <select id="type" onChange={handleChange}>
+                <option value="personal">kişisel</option>
+                <option value="corporation">şirket</option>
+              </select>
+              {JSON.stringify(values.type)}
               {touched.type && errors.type ? (
                 <span className="text-danger">{errors.type}</span>
               ) : null}
@@ -109,7 +106,7 @@ function Form() {
           </div>
         </div>
         <hr />
-        {values.type ? (
+        {values.type === 'personal' ? (
           <>
             <div className="col-lg-6 col-md-12 p-3">
               <div className="d-flex flex-column ">
