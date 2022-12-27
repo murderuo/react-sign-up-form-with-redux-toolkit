@@ -2,7 +2,8 @@ import { useFormik } from 'formik';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
-import { showmeState, updateUser } from '../../store/userSlice';
+import {  updateUser } from '../../store/userSlice';
+
 
 function PortalForm({ user, modalConfig, setModalConfig }) {
   const [phoneNumber, setPhoneNumber] = useState('05xxxxxxxxx');

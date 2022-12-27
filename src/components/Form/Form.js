@@ -3,8 +3,8 @@ import { useState } from 'react';
 import * as Yup from 'yup';
 import 'yup-phone';
 import { addUser } from '../../store/userSlice';
-
 import { useDispatch } from 'react-redux';
+import Select from 'react-select';
 
 function Form() {
   const [phoneNumber, setPhoneNumber] = useState('05xxxxxxxxx');
@@ -17,6 +17,11 @@ function Form() {
   };
 
   const dispatch = useDispatch();
+
+  const selectOptions = [
+    { value: 'personal', label: 'Personal account' },
+    { value: 'corporation', label: 'corporation account' },
+  ];
 
   const initialValues = {
     id: '',
@@ -66,38 +71,59 @@ function Form() {
       'Must match "password" field value',
     ),
   });
-  const { values, handleChange, handleReset, handleSubmit, errors, touched } =
-    useFormik({
-      initialValues,
-      onSubmit: values => {
-        const newValues =
-          values.type === 'personal'
-            ? { ...values }
-            : { ...values, firstName: 'corporation' };
+  const {
+    values,
+    handleChange,
+    handleReset,
+    handleSubmit,
+    setFieldValue,
+    errors,
+    touched,
+  } = useFormik({
+    initialValues,
+    onSubmit: values => {
+      const newValues =
+        values.type === 'personal'
+          ? { ...values }
+          : { ...values, firstName: 'corporation' };
 
-        console.log(newValues);
+      console.log(newValues);
 
-        dispatch(addUser(newValues));
-        handleReset();
-        // if (!errors) {
-        // }
-      },
-      validationSchema: valSchema,
-    });
+      dispatch(addUser(newValues));
+      handleReset();
+      // if (!errors) {
+      // }
+    },
+    validationSchema: valSchema,
+  });
+
+  const handleSelectChange = val => {
+   
+    setFieldValue('type',val.value)
+    // console.log(values);
+  };
 
   return (
     <>
       <form className="row" onSubmit={handleSubmit} onReset={handleReset}>
         <div className="col-lg-12 col-md-12 p-3">
-          <div className="d-flex gap-3 justify-content-center">
-            <div className="d-flex gap-2">
+          <div className="d-flex gap-3 justify-content-around">
+            <div className="d-flex gap-3 align-items-center justify-content-between">
               <label className="form-check-label" htmlFor="type">
-                kayıt tipi
+                Record Type: 
               </label>
-              <select id="type" onChange={handleChange}>
+              <Select
+                inputId="type"
+                defaultValue={selectOptions[0]}
+              
+                onChange={handleSelectChange}
+                options={selectOptions}
+                isSearchable={false}
+              />
+              {/* <select id="type" onChange={handleChange}>
                 <option value="personal">kişisel</option>
                 <option value="corporation">şirket</option>
-              </select>
+              </select> */}
               {/* {JSON.stringify(values.type)} */}
               {touched.type && errors.type ? (
                 <span className="text-danger">{errors.type}</span>
