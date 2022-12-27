@@ -72,7 +72,7 @@ function PortalForm({ user, modalConfig, setModalConfig }) {
               id="firstName"
               onChange={handleChange}
               value={values.firstName}
-              disabled={!initialValues.type}
+              disabled={values.firstName === 'corporation' ? true : false}
             />
           </div>
           {touched.firstName && errors.firstName ? (

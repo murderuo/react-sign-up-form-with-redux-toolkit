@@ -98,7 +98,7 @@ function Form() {
                 <option value="personal">kişisel</option>
                 <option value="corporation">şirket</option>
               </select>
-              {JSON.stringify(values.type)}
+              {/* {JSON.stringify(values.type)} */}
               {touched.type && errors.type ? (
                 <span className="text-danger">{errors.type}</span>
               ) : null}
